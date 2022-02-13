@@ -32,29 +32,31 @@
 
 import SwiftUI
 
-struct ExerciseView: View {
-    let exerciseNames = ["squat", "step-up", "burpee", "sun-salute"]
-    let videoNames = ["Squat", "Step-up", "Burpee", "Sun-salute"]
-    let index: Int
-    
+struct HeaderView: View {
+    let exerciseName: String
     var body: some View {
         VStack{
-            //Header Start
-            HeaderView(exerciseName: exerciseNames[index])
-            //header End
-            Text("Video player")
-            Text("Timer")
-            Text("Start/Done Button")
-            Text("Rating")
-            Text("History Button")
+            Text(exerciseName)
+                .font(.largeTitle)
+            HStack{
+                Image(systemName: "1.circle")
+                Image(systemName: "2.circle")
+                Image(systemName: "3.circle")
+                Image(systemName: "4.circle")
+            }.font(.title2)
         }
     }
 }
 
-struct ExerciseView_Previews: PreviewProvider {
+struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseView(index: 0)
+        Group {
+            HeaderView(exerciseName: "Squat")
+                .previewLayout(.sizeThatFits)
+            HeaderView(exerciseName: "Squat")
+                .preferredColorScheme(.dark)
+                .environment(\.sizeCategory, .accessibilityLarge)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }
-
-
