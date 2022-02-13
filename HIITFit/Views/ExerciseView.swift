@@ -38,7 +38,25 @@ struct ExerciseView: View {
     let index: Int
     
     var body: some View {
-        Text(exerciseNames[index])
+        VStack{
+            //Header Start
+            VStack{
+                Text(exerciseNames[index])
+                    .font(.largeTitle)
+                HStack{
+                    Image(systemName: "1.circle")
+                    Image(systemName: "2.circle")
+                    Image(systemName: "3.circle")
+                    Image(systemName: "4.circle")
+                }.font(.title2)
+            }
+            //header End
+            Text("Video player")
+            Text("Timer")
+            Text("Start/Done Button")
+            Text("Rating")
+            Text("History Button")
+        }
     }
 }
 
