@@ -32,32 +32,34 @@
 
 import SwiftUI
 
-struct HeaderView: View {
-    let title_text: String
+struct SuccessView: View {
+    let message = """
+        Good job completing all four exercises!
+        Remember tomorrow's another day.
+        So eat well and get some rest.
+        """
     var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                Image(systemName: "hand.wave")
-                Image(systemName: "1.circle")
-                Image(systemName: "2.circle")
-                Image(systemName: "3.circle")
-                Image(systemName: "4.circle")
-            }.font(.title2)
+        ZStack(alignment: .topTrailing){
+            Button(action: {}){
+                Button(action: {}){
+                    Image(systemName: "xmark.circle")
+                }.font(.title).padding(.trailing)
+            }
+            VStack{
+                Image(systemName: "hand.raised.fill")
+                    .resizable()
+                    .aspectRatio( contentMode: .fill)
+                    .frame(width: 75,height:75)
+                .foregroundColor(.purple)
+                Text("High Five!").font(.largeTitle).fontWeight(.bold).padding()
+                Text(message).foregroundColor(.gray).multilineTextAlignment(.center)
+            }
         }
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
+struct SuccessView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            HeaderView(title_text: "Squat")
-                .previewLayout(.sizeThatFits)
-            HeaderView(title_text: "Squat")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
+        SuccessView()
     }
 }

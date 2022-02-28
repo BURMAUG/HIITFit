@@ -32,32 +32,20 @@
 
 import SwiftUI
 
-struct HeaderView: View {
-    let title_text: String
+struct RatingView: View {
     var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                Image(systemName: "hand.wave")
-                Image(systemName: "1.circle")
-                Image(systemName: "2.circle")
-                Image(systemName: "3.circle")
-                Image(systemName: "4.circle")
-            }.font(.title2)
+        HStack {
+            ForEach(/*@START_MENU_TOKEN@*/0 ..< 5/*@END_MENU_TOKEN@*/) { _ in
+                Image(systemName: "waveform.path.ecg")
+                    .foregroundColor(.gray)
+                    .font(.largeTitle)
+            }
         }
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
+struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            HeaderView(title_text: "Squat")
-                .previewLayout(.sizeThatFits)
-            HeaderView(title_text: "Squat")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
+        RatingView().previewLayout(.sizeThatFits)
     }
 }

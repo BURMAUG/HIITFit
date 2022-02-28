@@ -30,34 +30,27 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import Foundation
 import SwiftUI
 
-struct HeaderView: View {
-    let title_text: String
-    var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                Image(systemName: "hand.wave")
-                Image(systemName: "1.circle")
-                Image(systemName: "2.circle")
-                Image(systemName: "3.circle")
-                Image(systemName: "4.circle")
-            }.font(.title2)
-        }
+struct Exercise{
+    let exercise_name: String
+    let video_name: String
+    
+    enum ExerciseEnum: String{
+        case squat = "Squat"
+        case step_up = "Step Up"
+        case burpee = "Burpee"
+        case sun_salute = "Sun Salute"
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            HeaderView(title_text: "Squat")
-                .previewLayout(.sizeThatFits)
-            HeaderView(title_text: "Squat")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
-    }
+//creating an array exercises of instance
+extension Exercise{
+    static let exercise = [
+        Exercise(exercise_name: ExerciseEnum.squat.rawValue, video_name: "squat"),
+        Exercise(exercise_name: ExerciseEnum.step_up.rawValue, video_name: "step up"),
+        Exercise(exercise_name: ExerciseEnum.burpee.rawValue, video_name: "burpee"),
+        Exercise(exercise_name: ExerciseEnum.sun_salute.rawValue, video_name: "sun salute")
+    ]
 }

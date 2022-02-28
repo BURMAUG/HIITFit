@@ -32,32 +32,43 @@
 
 import SwiftUI
 
-struct HeaderView: View {
-    let title_text: String
+struct HistoryView: View {
+    let today = Date()
+    let yesterday = Date().addingTimeInterval(-86400)
+    
+    let exercise1 = ["Squat", "Step Up", "Burpee", "Sun Salute"]
+    let exercise2 = ["Squat", "Step up", "Burpee"]
+    
     var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                Image(systemName: "hand.wave")
-                Image(systemName: "1.circle")
-                Image(systemName: "2.circle")
-                Image(systemName: "3.circle")
-                Image(systemName: "4.circle")
-            }.font(.title2)
+        ZStack(alignment: .topTrailing){
+            //adding a button
+            Button(action: {}){
+                Image(systemName: "xmark.circle")
+            }.font(.title).padding(.trailing)
+            VStack {
+                Text("History")
+                    .font(.title)
+                    .padding()
+                Form{
+                    Section(
+                        header: Text(today.formatted(as: "MMM d")).font(.headline)){}
+    //                Text(today.formatted(as: "MMM d")).font(.headline)
+                    ForEach(exercise1, id: \.self){
+                        exercise in Text(exercise)
+                    }
+                    Section(
+                        header:
+                            Text(yesterday.formatted(as: "MMM d")).font(.headline)){}
+                    ForEach(exercise2, id: \.self){exercise in Text(exercise)
+                    }
+                }
+            }
         }
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
+struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            HeaderView(title_text: "Squat")
-                .previewLayout(.sizeThatFits)
-            HeaderView(title_text: "Squat")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
+        HistoryView()
     }
 }

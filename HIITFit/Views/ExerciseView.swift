@@ -31,22 +31,40 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import AVKit
 
 struct ExerciseView: View {
-    let exerciseNames = ["squat", "step-up", "burpee", "sun-salute"]
-    let videoNames = ["Squat", "Step-up", "Burpee", "Sun-salute"]
+    let exerciseNames = ["Squat", "Step-up", "Burpee", "Sun-salute"]
+    let interval: TimeInterval = 30//adding timer to the app/counter for the exercise
+    let videoNames = ["squat", "step-up", "burpee", "sun-salute"]
     let index: Int
     
     var body: some View {
-        VStack{
-            //Header Start
-            HeaderView(exerciseName: exerciseNames[index])
-            //header End
-            Text("Video player")
-            Text("Timer")
-            Text("Start/Done Button")
-            Text("Rating")
-            Text("History Button")
+        GeometryReader { geometry in
+            VStack{
+                //Header Start
+                HeaderView(title_text: exerciseNames[index])
+                    .padding(.bottom)
+                //header End
+    //            Text("Video player") replacing with AVKit
+                if let url = Bundle.main.url(
+                    forResource: videoNames[index],
+                    withExtension: "mp4"){
+                        VideoPlayer(player: AVPlayer(url: url))
+                        .frame(height: geometry.size.height*0.45)
+                } else {
+                    Text("Couldn't find \(videoNames[index]).mp4")
+                        .foregroundColor(.red)
+                }
+                Text(Date().addingTimeInterval(interval), style: .timer)
+                    .font(.system(size: 90))
+                Button("Start/Done Button"){
+                }.font(.title3).padding()
+                RatingView().padding()
+                Spacer()
+                Button("History"){}
+                .padding(.bottom)
+            }
         }
     }
 }
