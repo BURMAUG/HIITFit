@@ -30,37 +30,24 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct HeaderView: View {
-    @Binding var selectedTab: Int
-    let title_text: String
-    
-    var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                ForEach(0 ..< Exercise.exercises.count){ index in
-                    let fill = index == selectedTab ? ".fill" : ""
-                    Image(systemName: "\(index + 1).circle\(fill)"
-                    ).onTapGesture {
-                        selectedTab = index
-                    }
-                }
-            }.font(.title2)
-        }
+
+extension HistoryStore{
+     func createDevData(){
+        exerciseDays = [
+            ExerciseDay(date: Date().addingTimeInterval(-86400), exercises: [
+                Exercise.exercises[0].exerciseName,
+                Exercise.exercises[1].exerciseName,
+                Exercise.exercises[2].exerciseName
+            ]),
+            ExerciseDay(
+                date: Date().addingTimeInterval(-86400 * 2),
+                exercises: [
+                    Exercise.exercises[1].exerciseName,
+                    Exercise.exercises[0].exerciseName
+            ])
+        ]
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            HeaderView(selectedTab: .constant(0), title_text: "Squat").previewLayout(.sizeThatFits)
-            HeaderView(selectedTab: .constant(1), title_text: "Step Up")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
-    }
-}

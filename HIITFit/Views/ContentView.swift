@@ -31,25 +31,42 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import AVFoundation
 
 struct ContentView: View {
+    
+    @State private var selectedTab = 9
+    @State private var history = HistoryStore()
+    
   var body: some View {
-      TabView{
-          WelcomeView()
-//              .tabItem { Text("Welcome") }
-          ForEach(0..<4){
-              index in ExerciseView(index: index)
+      TabView(selection: $selectedTab){
+          WelcomeView(selectedTab: $selectedTab, history: $history)
+              .tag(9)
+          ForEach(0..<Exercise.exercises.count){
+            index in ExerciseView(
+                selectedTab: $selectedTab, history: $history,
+                index: index).tag(index)
           }
-//          Text("Exercise 1")
-//              .tabItem{Text("Exercise 1")}
-          ForEach(0..<4){ number in ExerciseView(index: number)}
-//              .tabItem{Text("Exercise 2")}
-      }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-  }
+      }
+.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+//      TabView{
+//          WelcomeView()
+////              .tabItem { Text("Welcome") }
+//          ForEach(0..<Exercise.exercises.count){
+//              index in ExerciseView(index: index)
+//          }
+////          ForEach(0..<4){
+////              index in ExerciseView(index: index)
+////          }
+////          Text("Exercise 1")
+////              .tabItem{Text("Exercise 1")}
+//          ForEach(0..<4){ number in ExerciseView(index: number)}
+////              .tabItem{Text("Exercise 2")}
+//      }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+//  }
 }
-
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
   }
-}
+}}

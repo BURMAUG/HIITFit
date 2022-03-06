@@ -30,37 +30,50 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import Foundation
 import SwiftUI
 
-struct HeaderView: View {
-    @Binding var selectedTab: Int
-    let title_text: String
+struct Exercise {
+    let exerciseName: String
+    let videoName: String
     
-    var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                ForEach(0 ..< Exercise.exercises.count){ index in
-                    let fill = index == selectedTab ? ".fill" : ""
-                    Image(systemName: "\(index + 1).circle\(fill)"
-                    ).onTapGesture {
-                        selectedTab = index
-                    }
-                }
-            }.font(.title2)
+    enum ExerciseEnum: CustomStringConvertible{
+        case squat
+        case stepUp
+        case burpee
+        case sunSalute
+        
+        var description: String{
+            switch self {
+               case .squat:
+                 return NSLocalizedString("Squat", comment: "exercise")
+               case .stepUp:
+                 return NSLocalizedString("Step Up", comment: "exercise")
+               case .burpee:
+                 return NSLocalizedString("Burpee", comment: "exercise")
+               case .sunSalute:
+                 return NSLocalizedString(
+                   "Sun Salute", comment: "yoga stretch")
+            }
         }
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            HeaderView(selectedTab: .constant(0), title_text: "Squat").previewLayout(.sizeThatFits)
-            HeaderView(selectedTab: .constant(1), title_text: "Step Up")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
-    }
+//creating an array exercises of instance
+//the Execise instance can only have one array
+extension Exercise{
+    static let exercises = [
+        Exercise(
+          exerciseName: String(describing: ExerciseEnum.squat),
+          videoName: "squat"),
+        Exercise(
+          exerciseName: String(describing: ExerciseEnum.stepUp),
+          videoName: "step-up"),
+        Exercise(
+          exerciseName: String(describing: ExerciseEnum.burpee),
+          videoName: "burpee"),
+        Exercise(
+          exerciseName: String(describing: ExerciseEnum.sunSalute),
+          videoName: "sun-salute")
+    ]
 }

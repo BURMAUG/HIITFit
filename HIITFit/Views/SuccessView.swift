@@ -33,26 +33,36 @@
 import SwiftUI
 
 struct SuccessView: View {
+    
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var selectTab: Int
+    
     let message = """
         Good job completing all four exercises!
         Remember tomorrow's another day.
         So eat well and get some rest.
         """
+    
     var body: some View {
-        ZStack(alignment: .topTrailing){
-            Button(action: {}){
-                Button(action: {}){
-                    Image(systemName: "xmark.circle")
-                }.font(.title).padding(.trailing)
-            }
+        ZStack{
+//            Button(action: {}){
+////                Button(action: {}){
+////                    Image(systemName: "xmark.circle")
+////                }.font(.title).padding(.trailing)
+//            }
             VStack{
                 Image(systemName: "hand.raised.fill")
-                    .resizable()
-                    .aspectRatio( contentMode: .fill)
-                    .frame(width: 75,height:75)
-                .foregroundColor(.purple)
-                Text("High Five!").font(.largeTitle).fontWeight(.bold).padding()
+                    .resizedToFill(width: 75, height: 75)
+                    .foregroundColor(.purple)
+                Text("High Five!").font(.largeTitle).fontWeight(.heavy)
                 Text(message).foregroundColor(.gray).multilineTextAlignment(.center)
+            }
+                VStack{
+                    Spacer()
+                    Button("Continue"){
+                        presentationMode.wrappedValue.dismiss()
+                        selectTab = 9
+                    }.padding()
             }
         }
     }
@@ -60,6 +70,6 @@ struct SuccessView: View {
 
 struct SuccessView_Previews: PreviewProvider {
     static var previews: some View {
-        SuccessView()
+        SuccessView(selectTab: .constant(3))
     }
 }

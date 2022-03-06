@@ -33,18 +33,28 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    //is this a boolean flag
+    @State private var showHistory = false
+    @Binding var selectedTab: Int
+    @Binding var history: HistoryStore
+    
     var body: some View {
         ZStack {
             VStack {
-                HeaderView(title_text: "Welcome")
+                HeaderView(selectedTab: $selectedTab, title_text: "Welcome")
                 Spacer()
-                Button("History"){}
-                .padding(.bottom)
+                //History Button
+                Button("History"){
+                    //this toggle actions bring the sheet up
+                    showHistory.toggle()
+                }.sheet(isPresented: $showHistory){
+                    HistoryView(history: HistoryStore(),showHistory: $showHistory)
+                }
             }
             VStack{
                 HStack(alignment: .bottom){
                     VStack(alignment: .leading){
-                        Text("Get fit").font(.largeTitle)
+                        Text(NSLocalizedString("Get Fit", comment: "invitation to exercise")).font(.largeTitle)
                         Text("With high intensity interval training").font(.headline)
                     }
                     Image("step-up")
@@ -53,8 +63,8 @@ struct WelcomeView: View {
                         .frame(width: 240.0, height: 240.0)
                         .clipShape(Circle())
                 }
-                Button(action: {}){
-                    Text("Get Started")
+                Button(action: {selectedTab = 0}){
+                    Text(NSLocalizedString("Get Started", comment: "invitation"))
                     Image(systemName: "arrow.right.circle")
                 }.font(.title2).padding().background(
                 RoundedRectangle(cornerRadius: 20)
@@ -66,6 +76,6 @@ struct WelcomeView: View {
 
 struct WelcomeView_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeView()
+        WelcomeView(selectedTab: .constant(9), history: .constant(HistoryStore()))
     }
 }

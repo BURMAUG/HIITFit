@@ -30,27 +30,29 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
 import SwiftUI
 
-struct Exercise{
-    let exercise_name: String
-    let video_name: String
+struct TimerView: View {
+    @State private var timeRemaining = 3
+    @Binding var timerDone: Bool
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    enum ExerciseEnum: String{
-        case squat = "Squat"
-        case step_up = "Step Up"
-        case burpee = "Burpee"
-        case sun_salute = "Sun Salute"
+    var body: some View {
+        Text("\(timeRemaining)")
+            .font(.system(size: 90, design: .rounded))
+            .padding()
+            .onReceive(timer){ _ in
+                if self.timeRemaining > 0{
+                    self.timeRemaining -= 1
+                }else{
+                    timerDone = true
+                }
+            }
     }
 }
 
-//creating an array exercises of instance
-extension Exercise{
-    static let exercise = [
-        Exercise(exercise_name: ExerciseEnum.squat.rawValue, video_name: "squat"),
-        Exercise(exercise_name: ExerciseEnum.step_up.rawValue, video_name: "step up"),
-        Exercise(exercise_name: ExerciseEnum.burpee.rawValue, video_name: "burpee"),
-        Exercise(exercise_name: ExerciseEnum.sun_salute.rawValue, video_name: "sun salute")
-    ]
+struct TimerView_Previews: PreviewProvider {
+    static var previews: some View {
+        TimerView(timerDone: .constant(false)).previewLayout(.sizeThatFits)
+    }
 }

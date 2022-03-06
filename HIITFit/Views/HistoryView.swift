@@ -33,34 +33,37 @@
 import SwiftUI
 
 struct HistoryView: View {
-    let today = Date()
-    let yesterday = Date().addingTimeInterval(-86400)
+//    let today = Date()
+//    let yesterday = Date().addingTimeInterval(-86400)
+//    @EnvironmentObject var history: HistoryStore
+    let history: HistoryStore //history won't change
     
     let exercise1 = ["Squat", "Step Up", "Burpee", "Sun Salute"]
     let exercise2 = ["Squat", "Step up", "Burpee"]
     
+    @Binding var showHistory: Bool
+    
     var body: some View {
         ZStack(alignment: .topTrailing){
             //adding a button
-            Button(action: {}){
+            Button(action: {showHistory.toggle()}){
                 Image(systemName: "xmark.circle")
             }.font(.title).padding(.trailing)
             VStack {
-                Text("History")
+                Text(NSLocalizedString("History", comment: "view user activity"))
                     .font(.title)
                     .padding()
                 Form{
-                    Section(
-                        header: Text(today.formatted(as: "MMM d")).font(.headline)){}
-    //                Text(today.formatted(as: "MMM d")).font(.headline)
-                    ForEach(exercise1, id: \.self){
-                        exercise in Text(exercise)
-                    }
-                    Section(
-                        header:
-                            Text(yesterday.formatted(as: "MMM d")).font(.headline)){}
-                    ForEach(exercise2, id: \.self){exercise in Text(exercise)
-                    }
+                    ForEach(history.exerciseDays) { day in
+                       Section(
+                         header:
+                           Text(day.date.formatted(as: "MMM d"))
+                           .font(.headline)) {
+                         ForEach(day.exercises, id: \.self) { exercise in
+                           Text(exercise)
+                         }
+                       }
+                     }
                 }
             }
         }
@@ -69,6 +72,8 @@ struct HistoryView: View {
 
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        HistoryView()
+            HistoryView(
+                history: HistoryStore(),
+                showHistory: .constant(true))
     }
 }

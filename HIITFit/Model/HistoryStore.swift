@@ -30,37 +30,51 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct HeaderView: View {
-    @Binding var selectedTab: Int
-    let title_text: String
+
+struct ExerciseDay: Identifiable{
+    let id = UUID()
+    let date: Date
+    var exercises : [String] = []
+}
+
+class HistoryStore: ObservableObject{
+    @Published var exerciseDays: [ExerciseDay] = []
+    init(){
+        #if DEBUG
+        createDevData()
+        #endif
+    }
     
-    var body: some View {
-        VStack{
-            Text(title_text)
-                .font(.largeTitle)
-            HStack{
-                ForEach(0 ..< Exercise.exercises.count){ index in
-                    let fill = index == selectedTab ? ".fill" : ""
-                    Image(systemName: "\(index + 1).circle\(fill)"
-                    ).onTapGesture {
-                        selectedTab = index
-                    }
-                }
-            }.font(.title2)
-        }
+    func addDoneExercise(_ exerciseName: String) {
+      let today = Date()
+      if today.isSameDay(as: exerciseDays[0].date) { // 1
+        print("Adding \(exerciseName)")
+        exerciseDays[0].exercises.append(exerciseName)
+      } else {
+        exerciseDays.insert( // 2
+          ExerciseDay(date: today, exercises: [exerciseName]),
+          at: 0)
+      }
     }
+
 }
 
-struct HeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            HeaderView(selectedTab: .constant(0), title_text: "Squat").previewLayout(.sizeThatFits)
-            HeaderView(selectedTab: .constant(1), title_text: "Step Up")
-                .preferredColorScheme(.dark)
-                .environment(\.sizeCategory, .accessibilityLarge)
-                .previewLayout(.sizeThatFits)
-        }
-    }
-}
+//extension HistoryStore{
+//    mutating func createDevData(){
+//        exerciseDays = [
+//            ExerciseDay(date: Date().addingTimeInterval(-86400), exercises: [
+//                Exercise.exercises[0].exerciseName,
+//                Exercise.exercises[1].exerciseName,
+//                Exercise.exercises[2].exerciseName
+//            ]),
+//            ExerciseDay(
+//                date: Date().addingTimeInterval(-86400 * 2),
+//                exercises: [
+//                    Exercise.exercises[1].exerciseName,
+//                    Exercise.exercises[0].exerciseName
+//            ]),
+//        ]
+//    }
+//}

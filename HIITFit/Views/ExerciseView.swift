@@ -34,36 +34,74 @@ import SwiftUI
 import AVKit
 
 struct ExerciseView: View {
-    let exerciseNames = ["Squat", "Step-up", "Burpee", "Sun-salute"]
-    let interval: TimeInterval = 30//adding timer to the app/counter for the exercise
-    let videoNames = ["squat", "step-up", "burpee", "sun-salute"]
+//    @State private var rating = 0
+    //use userDefaults
+    @AppStorage("rating") private var rating = 0 //unique for rating required for userDefaults
+    @State private var showSuccess = false
+    @State private var timerDone = false
+    @State private var showTimer = false
+    @State private var showHistory = false
+    
+    @Binding var selectedTab: Int
+//    @Binding var showHistory: Bool
+    
+//    @EnvironmentObject var history: HistoryStore
+    @Binding var history: HistoryStore
+    
+    var lastExercise: Bool {
+      index + 1 == Exercise.exercises.count
+    }
+    
     let index: Int
     
     var body: some View {
         GeometryReader { geometry in
             VStack{
                 //Header Start
-                HeaderView(title_text: exerciseNames[index])
+                HeaderView(selectedTab: $selectedTab, title_text: Exercise.exercises[index].exerciseName)
                     .padding(.bottom)
-                //header End
-    //            Text("Video player") replacing with AVKit
                 if let url = Bundle.main.url(
-                    forResource: videoNames[index],
+                    forResource: Exercise.exercises[index].videoName,
                     withExtension: "mp4"){
                         VideoPlayer(player: AVPlayer(url: url))
                         .frame(height: geometry.size.height*0.45)
                 } else {
-                    Text("Couldn't find \(videoNames[index]).mp4")
+                    Text("Couldn't find \(Exercise.exercises[index].videoName).mp4")
                         .foregroundColor(.red)
                 }
-                Text(Date().addingTimeInterval(interval), style: .timer)
-                    .font(.system(size: 90))
-                Button("Start/Done Button"){
-                }.font(.title3).padding()
-                RatingView().padding()
+                HStack(spacing: 150) {
+                  Button("Start Exercise") { // Move buttons above TimerView
+                    showTimer.toggle()
+                  }
+                  Button("Done") {
+                      history.addDoneExercise(Exercise.exercises[index].exerciseName)
+                      timerDone = false
+                      showTimer.toggle()
+                    if lastExercise {
+                      showSuccess.toggle()
+                    } else {
+                      selectedTab += 1
+                    }
+                  }.disabled(!timerDone)
+                  .sheet(isPresented: $showSuccess) {
+                      SuccessView(selectTab: $selectedTab)
+                  }
+                }
+                .font(.title3)
+                .padding()
+                if showTimer {
+                  TimerView(timerDone: $timerDone)
+                }
                 Spacer()
-                Button("History"){}
-                .padding(.bottom)
+                RatingView(rating: $rating) // Move RatingView below Spacer
+                  .padding()
+                Button("History"){
+                    showHistory.toggle()
+                    print("Add sheet")
+                }.sheet(isPresented: $showHistory){
+                    HistoryView(history:  history, showHistory: $showHistory)
+                }.padding(.bottom)
+
             }
         }
     }
@@ -71,7 +109,11 @@ struct ExerciseView: View {
 
 struct ExerciseView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseView(index: 0)
+        ExerciseView(
+            selectedTab: .constant(0),
+            history: .constant(HistoryStore()),
+            index: 0)
+          //.environmentObject(HistoryStore())
     }
 }
 
