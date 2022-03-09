@@ -33,18 +33,54 @@
 import SwiftUI
 
 struct RatingView: View {
-    @Binding var rating: Int
+    let exerciseIndex: Int
+    
+    @AppStorage("ratings") private var ratings = "4000"
+    @State private var rating = 0
     let maximumRating = 5
     let onColor = Color.red
     let offColor = Color.gray
+    
+    init(exerciseIndex: Int) {
+      self.exerciseIndex = exerciseIndex
+      let desiredLength = Exercise.exercises.count
+      if ratings.count < desiredLength {
+        ratings = ratings.padding(
+          toLength: desiredLength,
+          withPad: "0",
+          startingAt: 0)
+      }
+    }
+    
+    
+    func updateRating(index: Int) {
+      rating = index
+      let index = ratings.index(
+        ratings.startIndex,
+        offsetBy: exerciseIndex)
+      ratings.replaceSubrange(index...index, with: String(rating))
+    }
+
+    fileprivate func convertRating() {
+        // 2
+        let index = ratings.index(
+            ratings.startIndex,
+            offsetBy: exerciseIndex)
+        // 3
+        let character = ratings[index]
+        // 4
+        rating = character.wholeNumberValue ?? 0
+    }
     
     var body: some View {
         HStack {
             ForEach(0..<maximumRating+1) { index in
                 Image(systemName: "waveform.path.ecg")
                     .foregroundColor(index > rating ? offColor : onColor)
+                    .onChange(of: ratings){_ in  convertRating()
+                    }
                     .onTapGesture {
-                        rating = index
+                        updateRating(index: index)
                     }
                     .font(.largeTitle)
             }
@@ -53,7 +89,11 @@ struct RatingView: View {
 }
 
 struct RatingView_Previews: PreviewProvider {
-    static var previews: some View {
-        RatingView(rating: .constant(3)).previewLayout(.sizeThatFits)
-    }
+  @AppStorage("ratings") static var ratings: String?
+  static var previews: some View {
+    ratings = nil
+    return RatingView(exerciseIndex: 0)
+      .previewLayout(.sizeThatFits)
+  }
 }
+

@@ -41,18 +41,13 @@ struct ExerciseView: View {
     @State private var timerDone = false
     @State private var showTimer = false
     @State private var showHistory = false
-    
     @Binding var selectedTab: Int
-//    @Binding var showHistory: Bool
-    
-//    @EnvironmentObject var history: HistoryStore
     @Binding var history: HistoryStore
+    let index: Int
     
     var lastExercise: Bool {
       index + 1 == Exercise.exercises.count
     }
-    
-    let index: Int
     
     var body: some View {
         GeometryReader { geometry in
@@ -93,7 +88,7 @@ struct ExerciseView: View {
                   TimerView(timerDone: $timerDone)
                 }
                 Spacer()
-                RatingView(rating: $rating) // Move RatingView below Spacer
+                RatingView(exerciseIndex: index) // Move RatingView below Spacer
                   .padding()
                 Button("History"){
                     showHistory.toggle()
@@ -109,10 +104,11 @@ struct ExerciseView: View {
 
 struct ExerciseView_Previews: PreviewProvider {
     static var previews: some View {
-        ExerciseView(
-            selectedTab: .constant(0),
-            history: .constant(HistoryStore()),
-            index: 0)
+        ExerciseView(selectedTab: .constant(0), history: .constant(HistoryStore()), index: 0)
+//        ExerciseView(
+//            selectedTab: .constant(0),
+//            history: .constant(HistoryStore()),
+//            index: 0)
           //.environmentObject(HistoryStore())
     }
 }
